@@ -1,3 +1,4 @@
+from __future__ import division
 from collections import Counter
 import os
 import re
@@ -87,6 +88,17 @@ def parse_invindex(file, document_list):
 
     return document_list
 
+"""
+If any of the terms appear, the doc is returned
+"""
+def reduce_docs(document_list, word_list):
+    included_docs = []
+    for doc in document_list:
+        if any(word in doc.word_counts for word in word_list):
+            included_docs.append(doc)
+    return included_docs
+
+
 def calculate_tf(list_documents):
     for doc in list_documents:
         total_words = doc.total_words
@@ -112,23 +124,35 @@ def calculate_tf_idf(list_documents):
 def find_final_score(term_list, list_documents):
     pass
 
-document_list = {}  # Key is document name, value is the Document object
-path = os.getcwd()
 
-dat_path = os.path.join(os.path.join(path, 'pages'), 'docs.dat')
-document_list = parse_docs_dat(dat_path, document_list)
 
-inv_path = os.path.join(os.path.join(path, 'pages'), 'invindex.dat')
-document_list = parse_invindex(inv_path, document_list)
+def find_tf_idf_scores(dat_path, inv_path, word_list):
 
-documents = list(document_list.values())
-calculate_tf(documents)
-calculate_idf(documents)
-calculate_tf_idf(documents)
+    document_list = {}  # Key is document name, value is the Document object
+    #path = os.getcwd()
 
-d = documents[0]
-#print(d.tf_scores)
-#print(d.tf_idf_scores)
-k = d.tf_idf_scores
-top25 = Counter(k)
-print top25.most_common(25)
+    #dat_path = os.path.join(os.path.join(path, 'pages'), 'docs.dat')
+    document_list = parse_docs_dat(dat_path, document_list)
+
+    #inv_path = os.path.join(os.path.join(path, 'pages'), 'invindex.dat')
+    document_dict = parse_invindex(inv_path, document_list)
+
+    documents = list(document_dict.values())
+    documents = reduce_docs(documents, word_list)
+
+    calculate_tf(documents)
+    calculate_idf(documents)
+    calculate_tf_idf(documents)
+
+    return documents
+
+"""
+Sums all of the words tf-idf scores, with:
+key is the doc, value is the sum of the word scores
+"""
+def docs_by_tf_idf(list_documents, word_list):
+    new_docs = Counter()
+    for doc in list_documents:
+        new_docs[doc] = sum([doc.tf_idf_scores[word] for word in word_list])
+
+    return new_docs
