@@ -86,8 +86,3 @@ def get_urls(index_dat):
 def get_outbound_links(file):
     soup = BeautifulSoup(open(file), )
     return [x.get('href') for x in soup.findAll('a')]
-
-
-
-l = get_outbound_links('pages/1.html')
-print(l)

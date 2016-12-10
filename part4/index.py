@@ -50,6 +50,9 @@ def main():
 
     d.precompute(path, index_file)
 
+    print('\n\n', d.docs[0].docs)
+
+
     to_write_inverse = os.path.join(path, 'invindex.dat')
     to_write_doc = os.path.join(path, 'docs.dat')
 

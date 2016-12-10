@@ -26,7 +26,6 @@ class DocSearch(object):
             title = TC.get_title(file_path)
             url = urls[file]
             outbound = TC.get_outbound_links(file_path)
-
             self._update_docs(file, words, title, url, outbound)
 
         self._links_to_docs()
@@ -80,6 +79,10 @@ class DocSearch(object):
                         doc.docs.append(doc_urls[url[0]])
 
 
+    def _page_rank(self):
+        pass
+
+
 class Doc(object):
 
     def __init__(self, name):
@@ -90,6 +93,7 @@ class Doc(object):
 
         # New
         self.links = set()
+        self.pagerank = 0
         self.docs = []
 
     def __str__(self):
