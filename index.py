@@ -65,3 +65,12 @@ def demo_for_dan():
 
 if __name__ == '__main__':
     demo_for_dan()
+
+
+# I'm think that this will add the html tags to our script with the form in it?
+# Then the page reloads with the results displayed (all of the a-tags)
+def display_pages(results):
+    for i in range(0, len(results)):
+        #print "<a href=\"" + get_url(results[i]) + "\">" + get_link_text(results[i]) + "</a>"
+        # get_url(html_page) and get_link_text(html_page) aren't made, or at least I don't know
+        # where you have them
