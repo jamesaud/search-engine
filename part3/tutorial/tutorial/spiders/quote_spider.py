@@ -1,34 +1,21 @@
 import scrapy
-import urllib.parse
+import urlparse
 from scrapy.exceptions import CloseSpider
-import sys
-import os
 
 
-# Summary:
-# So here we are sub-classing a class from scrapy and
-# building a dfs search. We are using a stack data structure and backtracking
-# up our link structure when we hit a limit. We found this could only be done using
-# a stack. We had some minor issues on how to transfer over variables but
-# solved this by reading a file.
+
+
 class DfsSpider(scrapy.Spider):
     name = "dfs"
     counter = 0
-    limit = 10
-    directory = "/"
+    limit = 100000000
+
 
     def __init__(self):
-
-        file = open('global_settings.txt', 'r')
-
-        for index, arg in enumerate(file.readlines()):
-            if index == 0:
-                self.urls = [arg.strip()]
-            if index == 1:
-                self.limit = int(arg.strip())
-            if index == 2:
-                self.directory = arg.strip()
-
+        self.counter = 0
+        self.urls = [
+            'http://www.reddit.com/',
+        ]
         self.visited = set()
 
 
@@ -65,13 +52,12 @@ class DfsSpider(scrapy.Spider):
                 continue
             res = res[0]
             if 'http' not in res:
-                res = urllib.parse.urljoin(response.url, res)
+                res = urlparse.urljoin(response.url, res)
             urls.append(res)
         return urls
 
     def write_contents(self, response, counter):
         filename = str(counter) + '.html'
-        filename = os.path.join(self.directory, filename)
         with open(filename, 'w') as f:
             f.write(str(response.body))
         self.log('Saved file %s' % filename)
@@ -88,10 +74,6 @@ class DfsSpider(scrapy.Spider):
     def _get_counter(cls):
         return cls.counter
 
-
-# Summary:
-# For BFS we used Queues to complete this. We ran into minor road blocks on getting
-# this to work, but eventually overcame them.
 class BfsSpider(scrapy.Spider):
     name = "bfs"
     counter = 0
@@ -99,17 +81,9 @@ class BfsSpider(scrapy.Spider):
 
 
     def __init__(self):
-
-        file = open('global_settings.txt', 'r')
-
-        for index, arg in enumerate(file.readlines()):
-            if index == 0:
-                self.urls = [arg.strip()]
-            if index == 1:
-                self.limit = int(arg.strip())
-            if index == 2:
-                self.directory = arg.strip()
-
+        self.urls = [
+            'https://en.wikipedia.org/wiki/Muffin',
+        ]
         self.visited = set()
         self.queue = []
 
@@ -142,7 +116,6 @@ class BfsSpider(scrapy.Spider):
 
     def write_contents(self, response, counter):
         filename = str(counter) + '.html'
-        filename = os.path.join(self.directory, filename)
         with open(filename, 'w') as f:
             f.write(str(response.body))
         self.log('Saved file %s' % filename)
@@ -159,7 +132,7 @@ class BfsSpider(scrapy.Spider):
                 continue
             res = res[0]
             if 'http' not in res:
-                res = urllib.parse.urljoin(response.url, res)
+                res = urlparse.urljoin(response.url, res)
             urls.append(res)
         return urls
 

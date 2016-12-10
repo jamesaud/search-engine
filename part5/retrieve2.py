@@ -24,6 +24,8 @@ class Document(object):
         self.tf_scores = Counter()  # Word as key, score as value
         self.tf_idf_scores = Counter() # Word as key, score as value
 
+        self.links = []
+
 
     def __eq__(self, other):
         return self.name == other.name

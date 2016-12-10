@@ -81,3 +81,13 @@ def get_urls(index_dat):
         mappings[split[0]] = split[1] # set the shorthand url as the key, the real url as the value
 
     return mappings
+
+
+def get_outbound_links(file):
+    soup = BeautifulSoup(open(file), )
+    return [x.get('href') for x in soup.findAll('a')]
+
+
+
+l = get_outbound_links('pages/1.html')
+print(l)

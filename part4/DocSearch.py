@@ -4,35 +4,40 @@ import TextCleaner as TC
 from collections import defaultdict
 from collections import Counter
 
+count = 0
 class DocSearch(object):
-
     def __init__(self):
         self.word_docs = defaultdict(list) # Key, the word   Value, a list of docs it appears in
         self.docs = [] # List of Doc objects
 
     # Parse all the documents, update the Counter class
     def precompute(self, path, index_dat_name):
+        global count
+
         files = self._get_files(path)
         urls = TC.get_urls(os.path.join(path, index_dat_name)) # dict of url mappings
 
         for file in files:
+
+            print("Getting file...", count)
+            count+=1
             file_path = os.path.join(path, file)  # full file path
             words = self._clean_words(file_path) # list of words cleaned
-
             title = TC.get_title(file_path)
             url = urls[file]
+            outbound = TC.get_outbound_links(file_path)
+
+            self._update_docs(file, words, title, url, outbound)
+
+        self._links_to_docs()
 
 
-            self._update_docs(file, words, title, url)
-
-
-
-
-    def _update_docs(self, file_name, list_words, title, url):  # name of file, list of terms, the doc title, doc url
+    def _update_docs(self, file_name, list_words, title, url, outbound):  # name of file, list of terms, the doc title, doc url
         doc = Doc(file_name)
         doc.url = url
         doc.title = title
         doc.term_counts = Counter(list_words) # create dictionary of key: word, value: count
+        doc.links = set(outbound)
         self.docs.append(doc)
 
         set_words = set(list_words) # create a set so each word appears only once
@@ -65,6 +70,15 @@ class DocSearch(object):
     def _clean_words(file):
         return TC.valid_words_from_file(file)
 
+    def _links_to_docs(self):
+        doc_urls = {doc.url : doc for doc in self.docs}
+        for doc in self.docs:
+            for link in doc.links:
+                if link:
+                    url = [url for url in doc_urls if url.endswith(link)]
+                    if url:
+                        doc.docs.append(doc_urls[url[0]])
+
 
 class Doc(object):
 
@@ -73,6 +87,17 @@ class Doc(object):
         self.term_counts = Counter()
         self.title = None
         self.url = None
+
+        # New
+        self.links = set()
+        self.docs = []
+
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        return self.name
+
 
 
 """
