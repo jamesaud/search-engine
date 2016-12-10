@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+  </head>
+
+  <body>
+    <h1>Enter your query</h1>
+    <form action="." method="POST">
+      <input type = "text" name="query">
+      <input type = "submit" name = "query" value = "Submit">
+    </form>
+
+    <h2>Results</h2>
+    {% if results #}
+    {% for result in results %}
+
+    <h3>{{result}}</h3>
+    {% endfor %}
+    {% else %}
+    <h3>Empty result: No hit</h3>
+    {% if %}
+
+    </body>
+
+</html>
