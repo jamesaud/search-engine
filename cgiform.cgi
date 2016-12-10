@@ -17,7 +17,10 @@ docs = give_me_my_results(terms, 25)
 
 
 for doc in docs:
-    results += '<h4>{title}</h4><p>{url}</p>'.format(title=doc.title, url=doc.url)
+    results += '''
+    <h4>{title}</h4>
+    <p><a href="{url}">{url}</a></p>
+    <br>'''.format(title=doc.title, url=doc.url)
 
 
 
