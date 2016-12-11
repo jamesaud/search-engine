@@ -23,7 +23,7 @@ class Document(object):
         self.url = None
         self.tf_scores = Counter()  # Word as key, score as value
         self.tf_idf_scores = Counter() # Word as key, score as value
-
+        self.pagerank = None
         self.links = []
 
 
@@ -90,6 +90,19 @@ def parse_invindex(file, document_list):
 
     return document_list
 
+def parse_pr(file, document_list):
+    with open(file) as f:
+        lines = f.readlines()
+
+    doc_by_name = {doc.name : doc for doc in document_list}
+    for line in lines:
+        split = line.split()
+        doc_name, pr = split
+        doc = doc_by_name.get(doc_name)
+        if doc is not None:
+            doc.pagerank = pr
+
+
 """
 If any of the terms appear, the doc is returned
 """
@@ -123,12 +136,7 @@ def calculate_tf_idf(list_documents):
             doc.tf_idf_scores[word] = tf_idf_score
 
 
-def find_final_score(term_list, list_documents):
-    pass
-
-
-
-def find_tf_idf_scores(dat_path, inv_path, word_list):
+def find_scores(dat_path, inv_path, pr_path, word_list):
 
     document_list = {}  # Key is document name, value is the Document object
     #path = os.getcwd()
@@ -145,16 +153,21 @@ def find_tf_idf_scores(dat_path, inv_path, word_list):
     calculate_tf(documents)
     calculate_idf(documents)
     calculate_tf_idf(documents)
+    parse_pr(pr_path, documents)
 
     return documents
 
 """
 Sums all of the words tf-idf scores, with:
 key is the doc, value is the sum of the word scores
+multiplies by the pagerank score
 """
-def docs_by_tf_idf(list_documents, word_list):
+def docs_by_score(list_documents, word_list):
     new_docs = Counter()
     for doc in list_documents:
-        new_docs[doc] = sum([doc.tf_idf_scores[word] for word in word_list])
+        score = sum([doc.tf_idf_scores[word] for word in word_list]) * float(doc.pagerank)
+        new_docs[doc] = score
 
     return new_docs
+
+

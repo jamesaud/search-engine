@@ -11,17 +11,16 @@ html="""
 """
 results = ''
 
-terms = form.getfirst('query').split()
-
-docs = give_me_my_results(terms, 25)
-
-
-for doc in docs:
-    results += '''
-    <h4>{title}</h4>
-    <p><a href="{url}">{url}</a></p>
-    <br>'''.format(title=doc.title, url=doc.url)
-
-
+terms = form.getfirst('query', 'this is a simple test to find results').split()
+try:
+  docs = give_me_my_results(terms, 100)
+except ValueError:
+  results = '<h1>Sorry, no results found</h1>'
+else:
+  for doc in docs:
+      results += '''
+      <h4>{title}</h4>
+      <p><a href="{url}">{url}</a></p>
+      <br>'''.format(title=doc.title, url=doc.url)
 
 print(html.format(content=results))

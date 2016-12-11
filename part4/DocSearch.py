@@ -1,8 +1,10 @@
+from __future__ import print_function, division
 import os
 import operator
 import TextCleaner as TC
 from collections import defaultdict
 from collections import Counter
+from collections import defaultdict
 
 count = 0
 class DocSearch(object):
@@ -29,6 +31,8 @@ class DocSearch(object):
             self._update_docs(file, words, title, url, outbound)
 
         self._links_to_docs()
+        self._initialize_page_rank()
+        self._page_rank()
 
 
     def _update_docs(self, file_name, list_words, title, url, outbound):  # name of file, list of terms, the doc title, doc url
@@ -79,8 +83,33 @@ class DocSearch(object):
                         doc.docs.append(doc_urls[url[0]])
 
 
-    def _page_rank(self):
-        pass
+    def _initialize_page_rank(self):
+        # Initialize page rank
+        docs = self.docs
+        pr = 1/len(docs)
+        for doc in docs:
+            doc.pagerank = pr
+
+    def _page_rank(self, d=.5, r=20):
+
+        docs_inbound = defaultdict(list)
+        for doc in self.docs:
+            for neighbor in doc.docs:
+                docs_inbound[neighbor].append(doc)
+
+        for doc in docs_inbound:
+            if doc.docs:
+                page_rank_neighbors = 0
+                neighbor_docs = 0
+                for neighbor in doc.docs:
+                    page_rank_neighbors += neighbor.pagerank / len(neighbor.docs)
+                neighbor_docs += len(neighbor.docs)
+
+                doc.pagerank = (1-d) + d * (page_rank_neighbors)
+
+        if r == 0:
+            return
+        self._page_rank(r=r-1)
 
 
 class Doc(object):

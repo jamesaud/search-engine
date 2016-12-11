@@ -1,4 +1,5 @@
 import TextCleaner as TC
+from DocSearch import DocSearch, Doc
 import unittest
 import os
 
@@ -15,16 +16,35 @@ class TextCleanerTests(unittest.TestCase):
 
         self.assertEquals(stems, no_stems)
 
-    def test_get_url(self):
-        index = os.path.join(os.getcwd(), 'pages/index.dat')
-        url = TC.get_url('1.html', index)
-        self.assertEquals('http://bloomington.craigslist.org/apa/5839062999.html', url)
 
 
-    def test_get_title(self):
-        html = '<title>hello</title>'
-        title = TC.get_title(html)
-        self.assertEquals(title, 'hello')
+
+
+class DocSearchTests(unittest.TestCase):
+
+    def setUp(self):
+        d1 = Doc('A')
+        d2 = Doc('B')
+        d3 = Doc('C')
+        d1.docs=[d2,d3]
+        d2.docs=[d3]
+        d3.docs=[d1]
+        self.DS = DocSearch()
+        self.DS.docs += [d1, d2, d3]
+
+
+
+    def test_page_rank_intialize(self):
+        self.DS._initialize_page_rank()
+        self.assertAlmostEqual(self.DS.docs[0].pagerank, .333333333333333)
+        pass
+
+    def test_page_rank(self):
+        self.DS._initialize_page_rank()
+        self.DS._page_rank()
+        ls = [doc.pagerank for doc in self.DS.docs]
+        print(ls)
+
 
 if __name__ == "__main__":
     unittest.main()

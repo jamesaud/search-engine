@@ -30,6 +30,14 @@ def write_docs_dat(file, DS):
 
             f.write('{0} {1} {2} {3}\n'.format(doc.name, length, [doc.title], doc.url))
 
+
+def write_pr_dat(file, DS):
+    docs = DS.docs
+
+    with open(file, 'w') as f:
+        for doc in docs:
+            f.write('{0} {1}\n'.format(doc.name, doc.pagerank))
+
 def main():
     def parse_args():
         args = sys.argv
@@ -55,9 +63,12 @@ def main():
 
     to_write_inverse = os.path.join(path, 'invindex.dat')
     to_write_doc = os.path.join(path, 'docs.dat')
+    to_write_pr = os.path.join(path, 'pr.dat')
+
 
     write_inverse_index(to_write_inverse, d)
     write_docs_dat(to_write_doc, d)
+    write_pr_dat(to_write_pr, d)
 
     print("Succesfully wrote invindex.dat and docs.dat")
 
