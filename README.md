@@ -49,12 +49,15 @@ Page rank was an interesting problem for us, and we think we took a simple yet e
 
 In order to avoid refactoring code based on parsing docs.dat, a new file pr.dat is written which links pages to their pagerank. These values, along with the inv_index.dat, are precomputed. When a user searches for terms, our program reads in from these precomputed files and quickly (less than a second) can compute our evaluation of TF-IDFT & Page Rank to deliver the results page.
 
-Our page base was 20,000 pages starting from alexa.com/topsites/countries/US using BFS traversal. We had a hard time deciding where to start in order to acquire a wide variety of sites and content. The first time we crawled, we started on reddit (granted it was with DFS) and ended up getting stuck on crawling exclusively user profile pages for a long time before deciding to stop the crawler and start somewhere else.
+Our page base was 20,000 pages starting from alexa.com/topsites/countries/US using BFS traversal. We had a hard time deciding where to start in order to acquire a wide variety of sites and content. The first time we crawled, we started on reddit (granted it was with DFS) and ended up getting stuck on crawling exclusively user profile pages for a long time before deciding to stop the crawler and start somewhere else. 
 
 
 User Eval Experiment
 
 We had our roommates test our search engine and they got disappointing results. They searched terms like "ultimate frisbee" and "audl" and the pages they were looking for did not come up. We intend to keep our crawler running for a few days longer in hopes that it will pick up some more pages and more variety. More general search terms yielded better results, as did search terms with more key words in it. The way we implemented the search engine allows OR results to appear, so that more key words means a greater amount of results but also more focused results because of our TF-IDF score summation.
+We had them also search Google for their search querries, which was a hands-down won in terms of quality. Simply, our search engine did not crawl enough pages to provide valid results for specialized queries like 'ultimate frisbee'. Something to note was that our results were always very valid in terms of containing the right information. This is because of TF-IDF having such an impact on our results, guaranteeing a high volume of terms inside the document itself.
+
+In the future, hooking up our engine to a database system rather than text files would be a much better way of quickly getting results. It also would help with maintaining data integrity and a consistent API for accessing information. Also, page rank would be a more determining factor as we would have a better network of pages that link to one another. In our network, not that many pages formed a graph.
 
 Sources:
 The page rank website we mentioned above.
