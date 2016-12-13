@@ -1,5 +1,6 @@
 import TextCleaner as TC
-from DocSearch import DocSearch, Doc
+import DocSearch as DC
+
 import unittest
 import os
 
@@ -17,33 +18,33 @@ class TextCleanerTests(unittest.TestCase):
         self.assertEquals(stems, no_stems)
 
 
+    def test_get_title(self):
+        html = "test_files/html/test.html"
+        title = TC.get_title(html)
+        self.assertEquals(title, 'hello')
+        
+    
+    def test_remove_stopwords(self):
+        tokens = ("i ate his chicken sandwich all by myself and then i flew to the moon").split()
+        tokens = TC._remove_stopwords(tokens)
+        remove_stopwords = ("ate chicken sandwich flew moon".split())
+        self.assertEquals(tokens, remove_stopwords)
 
+    def test_clean_text(self):
+        pass
 
 
 class DocSearchTests(unittest.TestCase):
 
     def setUp(self):
-        d1 = Doc('A')
-        d2 = Doc('B')
-        d3 = Doc('C')
-        d1.docs=[d2,d3]
-        d2.docs=[d3]
-        d3.docs=[d1]
-        self.DS = DocSearch()
-        self.DS.docs += [d1, d2, d3]
+        self.search = DC.DocSearch()
 
+    def test_get_files(self):
+        files = ["test.html", "one.html"]
+        getFiles = list(self.search._get_files("test_files/html"))
 
+        self.assertEquals(files, getFiles)
 
-    def test_page_rank_intialize(self):
-        self.DS._initialize_page_rank()
-        self.assertAlmostEqual(self.DS.docs[0].pagerank, .333333333333333)
-        pass
-
-    def test_page_rank(self):
-        self.DS._initialize_page_rank()
-        self.DS._page_rank()
-        ls = [doc.pagerank for doc in self.DS.docs]
-        print(ls)
 
 
 if __name__ == "__main__":
