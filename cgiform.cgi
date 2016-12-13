@@ -28,12 +28,14 @@ try:
       if len(terms) == 1:
         terms.append('looking') # Filthy, we have a bug where some len(1) words cause the scores to be 0. So we append a rather uncommon word.
         docs = give_me_my_results(terms, 100)
+        docs = [doc for doc in docs if doc.final_score > 0]
 
   if docs[0].final_score == 0:
       print("<h4>The search term only appeared once in the results, causing tf_idf to be 0. Sorting by PageRank.</h4>")
       docs_pr = [(doc, doc.pagerank) for doc in docs]
       docs = sorted(docs_pr, key=itemgetter(1), reverse=True)
       docs = map(itemgetter(0), docs)
+      
   length = len(docs)
   extra = "For the search term: {0}".format(' '.join(display_terms))
 except ValueError:
