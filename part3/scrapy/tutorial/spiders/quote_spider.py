@@ -77,12 +77,12 @@ class DfsSpider(scrapy.Spider):
 class BfsSpider(scrapy.Spider):
     name = "bfs"
     counter = 0
-    limit = 10
+    limit = 100000
 
 
     def __init__(self):
         self.urls = [
-            'https://en.wikipedia.org/wiki/Muffin',
+            'http://www.imdb.com/',
         ]
         self.visited = set()
         self.queue = []

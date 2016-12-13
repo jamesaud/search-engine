@@ -5,6 +5,7 @@ import TextCleaner as TC
 from collections import defaultdict
 from collections import Counter
 from collections import defaultdict
+import sys
 
 count = 0
 class DocSearch(object):
@@ -21,7 +22,8 @@ class DocSearch(object):
 
         for file in files:
 
-            print("Getting file...", count)
+            sys.stdout.write("\r Getting File %i" % count)
+            sys.stdout.flush()
             count+=1
             file_path = os.path.join(path, file)  # full file path
             words = self._clean_words(file_path) # list of words cleaned
@@ -102,7 +104,8 @@ class DocSearch(object):
                 page_rank_neighbors = 0
                 neighbor_docs = 0
                 for neighbor in doc.docs:
-                    page_rank_neighbors += neighbor.pagerank / len(neighbor.docs)
+                    if len(neighbor.docs) > 0:
+                        page_rank_neighbors += neighbor.pagerank / len(neighbor.docs)
                 neighbor_docs += len(neighbor.docs)
 
                 doc.pagerank = (1-d) + d * (page_rank_neighbors)

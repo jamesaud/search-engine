@@ -39,6 +39,8 @@ def write_pr_dat(file, DS):
             f.write('{0} {1}\n'.format(doc.name, doc.pagerank))
 
 def main():
+    import nltk
+   # nltk.download()
     def parse_args():
         args = sys.argv
         if len(args) != 3:
@@ -48,8 +50,8 @@ def main():
 
         return args
 
-    directory, index_file = parse_args()
-
+    #directory, index_file = parse_args()
+    directory, index_file = 'pages', 'index.dat' # For testing in pycharm
 
     path = os.getcwd()
     path = os.path.join(path, directory)

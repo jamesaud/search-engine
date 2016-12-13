@@ -36,7 +36,6 @@ def give_me_my_results(list_words, limit):
     list_words = clean_words(list_words)
     doc_scores = search_words(list_words)
     sorted_doc_scores = limit_results(doc_scores, limit)
-
+    for doc, score in sorted_doc_scores:
+        doc.final_score = score
     return map(itemgetter(0), sorted_doc_scores)
-
-
