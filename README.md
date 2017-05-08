@@ -18,6 +18,7 @@ Running back-end programs:
 	retrieval - /cgiform.cgi
 
 
+SEE IT IN ACTION:
 
 Search Engine URL - http://cgi.soic.indiana.edu/~jamaudre/search/search/spud.html
 
